@@ -70,6 +70,12 @@ public class OrderListServlet extends HttpServlet {
             throws ServletException, IOException {
         String orderId = request.getParameter("orderId");
 
+        if (orderId == null || orderId.trim().isEmpty()) {
+            request.setAttribute("errorMsg", "订单号不能为空！");
+            doGet(request, response);
+            return;
+        }
+
         // 更新订单状态为已取消(-1)
         OrderDao orderDao = new OrderDao();
         boolean success = orderDao.updateOrderStatus(orderId, -1);

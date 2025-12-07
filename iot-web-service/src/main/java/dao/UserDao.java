@@ -159,9 +159,8 @@ public class UserDao {
         return result > 0;
     }
 
-    // 删除用户
+    // 删除用户（先删除相关数据，再删除用户）
     public boolean deleteUser(int id) {
-        String sql = "DELETE FROM t_user WHERE id=?";
         Connection conn = null;
         PreparedStatement ps = null;
         int result = 0;
@@ -169,13 +168,39 @@ public class UserDao {
         try {
             conn = DataSourceUtil.initConn();
             if(conn != null) {
-                ps = conn.prepareStatement(sql);
+                conn.setAutoCommit(false); // 开始事务
+
+                // 先删除相关购物车项
+                String deleteCartSql = "DELETE FROM t_cart WHERE user_id=?";
+                ps = conn.prepareStatement(deleteCartSql);
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                if (ps != null) ps.close();
+
+                // 再删除相关订单
+                String deleteOrdersSql = "DELETE FROM t_orders WHERE user_id=?";
+                ps = conn.prepareStatement(deleteOrdersSql);
+                ps.setInt(1, id);
+                ps.executeUpdate();
+                if (ps != null) ps.close();
+
+                // 最后删除用户
+                String deleteUserSql = "DELETE FROM t_user WHERE id=?";
+                ps = conn.prepareStatement(deleteUserSql);
                 ps.setInt(1, id);
                 result = ps.executeUpdate();
+
+                conn.commit(); // 提交事务
                 System.out.println("删除用户，影响行数: " + result);
             }
         } catch (Exception e) {
             e.printStackTrace();
+            // 回滚事务
+            try {
+                if(conn != null) conn.rollback();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
         } finally {
             if (ps != null) {
                 try {

@@ -148,16 +148,29 @@
                     %>
                 </td>
                 <td>
+                    <a href="<%= request.getContextPath() %>/orderDetail.jsp?orderId=<%= order.getOrderId() %>" style="color: #008CBA; margin-right: 10px;">查看详情</a>
                     <% if(order.getStatus() == 0) { %>
-                        <a href="<%= request.getContextPath() %>/servlet/orderList?action=cancel&orderId=<%= order.getOrderId() %>" style="color: #f44336;" onclick="return confirm('确定要取消订单吗？')">取消订单</a>
+                        <form method="post" action="<%= request.getContextPath() %>/servlet/orderList" style="display: inline;">
+                            <input type="hidden" name="action" value="cancel">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="取消订单" style="background: none; border: none; color: #f44336; cursor: pointer; font: inherit;" onclick="return confirm('确定要取消订单吗？')">
+                        </form>
                     <% } else if(order.getStatus() == 2) { %>
-                        <a href="<%= request.getContextPath() %>/servlet/orderList?action=confirm&orderId=<%= order.getOrderId() %>" style="color: #4CAF50;" onclick="return confirm('确定已收到商品吗？')">确认收货</a>
-                    <% } else if(order.getStatus() == 0 || order.getStatus() == 1) { %>
+                        <form method="post" action="<%= request.getContextPath() %>/servlet/orderList" style="display: inline;">
+                            <input type="hidden" name="action" value="confirm">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="确认收货" style="background: none; border: none; color: #4CAF50; cursor: pointer; font: inherit;" onclick="return confirm('确定已收到商品吗？')">
+                        </form>
+                    <% } else if(order.getStatus() == 1) { %>
                         <a href="#" style="color: #9E9E9E;" disabled>待处理</a>
                     <% } else if(order.getStatus() == 3) { %>
                         <a href="#" style="color: #4CAF50;">交易完成</a>
                     <% } else if(order.getStatus() == -1) { %>
-                        <a href="#" style="color: #f44336;">订单已取消</a>
+                        <form method="post" action="<%= request.getContextPath() %>/servlet/orderList" style="display: inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="orderId" value="<%= order.getOrderId() %>">
+                            <input type="submit" value="删除订单" style="background: none; border: none; color: #f44336; cursor: pointer; font: inherit;" onclick="return confirm('确定要删除此订单吗？')">
+                        </form>
                     <% } %>
                 </td>
             </tr>

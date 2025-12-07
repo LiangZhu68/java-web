@@ -173,7 +173,7 @@ public class OrderDao {
 
     // 添加订单
     public boolean addOrder(Order order) {
-        String sql = "INSERT INTO t_orders (order_id, user_id, total_price, status, create_time, update_time, order_items) VALUES (?, ?, ?, ?, NOW(), NOW(), ?)";
+        String sql = "INSERT INTO t_orders (order_id, user_id, total_price, status, order_items) VALUES (?, ?, ?, ?, ?)";
         Connection conn = null;
         PreparedStatement ps = null;
         int result = 0;
@@ -214,6 +214,7 @@ public class OrderDao {
                 ps.setInt(1, status);
                 ps.setString(2, orderId);
                 result = ps.executeUpdate();
+                System.out.println("updateOrderStatus: 更新了 " + result + " 行，订单ID: " + orderId + "，新状态: " + status); // 调试信息
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -221,7 +222,9 @@ public class OrderDao {
             if(ps != null) {
                 try { ps.close(); } catch(Exception e) { e.printStackTrace(); }
             }
-            DataSourceUtil.closeConn(conn);
+            if(conn != null) {
+                DataSourceUtil.closeConn(conn);
+            }
         }
         return result > 0;
     }
@@ -238,6 +241,36 @@ public class OrderDao {
             if(conn != null) {
                 ps = conn.prepareStatement(sql);
                 ps.setString(1, orderId);
+                result = ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if(ps != null) {
+                try { ps.close(); } catch(Exception e) { e.printStackTrace(); }
+            }
+            if(conn != null) {
+                DataSourceUtil.closeConn(conn);
+            }
+        }
+        return result > 0;
+    }
+    
+    // 更新订单
+    public boolean updateOrder(Order order) {
+        String sql = "UPDATE t_orders SET total_price=?, status=?, order_items=?, update_time=NOW() WHERE order_id=?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            if(conn != null) {
+                ps = conn.prepareStatement(sql);
+                ps.setDouble(1, order.getTotalPrice());
+                ps.setInt(2, order.getStatus());
+                ps.setString(3, order.getOrderItems());
+                ps.setString(4, order.getOrderId());
                 result = ps.executeUpdate();
             }
         } catch (Exception e) {
