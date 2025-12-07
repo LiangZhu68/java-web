@@ -22,12 +22,36 @@ public class UpdateDeleteBookServlet extends HttpServlet {
         }
     }
     
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String path = request.getServletPath();
-        
-        if("/servlet/deleteBook".equals(path)) {
+
+        if("/servlet/updateBook".equals(path)) {
+            showEditForm(request, response);
+        } else if("/servlet/deleteBook".equals(path)) {
             deleteBook(request, response);
+        }
+    }
+
+    private void showEditForm(HttpServletRequest request, HttpServletResponse response)
+            throws ServletException, IOException {
+        String idStr = request.getParameter("id");
+
+        try {
+            int id = Integer.parseInt(idStr);
+            BookDao bookDao = new BookDao();
+            Book book = bookDao.getBookById(id);
+
+            if(book != null) {
+                request.setAttribute("book", book);
+                request.getRequestDispatcher("/editBook.jsp").forward(request, response);
+            } else {
+                request.setAttribute("errorMsg", "未找到指定的图书！");
+                request.getRequestDispatcher("/servlet/bookList").forward(request, response);
+            }
+        } catch(NumberFormatException e) {
+            request.setAttribute("errorMsg", "无效的图书ID！");
+            request.getRequestDispatcher("/servlet/bookList").forward(request, response);
         }
     }
     
