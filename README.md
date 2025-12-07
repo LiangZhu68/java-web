@@ -9,6 +9,7 @@
 要求学生掌握JSP连接、访问MySql数据库（或SQL Server数据库）的方法；熟练使用JDBC API连接、访问数据库的常用接口与DriverManager类。
 ## 3. 项目结构
 ### 3.1 项目目录结构
+
 iot-web-service/
 ├── pom.xml
 ├── database.sql
@@ -59,6 +60,7 @@ iot-web-service/
 │   │       ├── static/             # 静态资源
 │   │       └── WEB-INF/
 │   │           └── web.xml         # Web应用配置文件
+
 ### 3.2 技术架构
 - **前端**: JSP + HTML + CSS
 - **后端**: Servlet
