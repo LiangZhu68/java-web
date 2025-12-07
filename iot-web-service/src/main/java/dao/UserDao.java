@@ -1,0 +1,276 @@
+package dao;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import beans.User;
+import beans.Book;
+
+public class UserDao {
+
+    // 获取所有用户数据
+    public List<User> getAllUsers() {
+        List<User> userList = new ArrayList<>();
+        String sql = "SELECT id, username, password, email FROM t_user";
+        Connection conn = null;
+        Statement stm = null;
+        ResultSet rs = null;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            if(conn == null) {
+                System.out.println("数据库连接失败！");
+                return userList;
+            }
+            stm = conn.createStatement();
+            rs = stm.executeQuery(sql);
+            while (rs.next()) {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+                userList.add(user);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 关闭资源
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (stm != null) {
+                try {
+                    stm.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn(conn);
+        }
+        return userList;
+    }
+
+    // 根据ID获取用户
+    public User getUserById(int id) {
+        String sql = "SELECT id, username, password, email FROM t_user WHERE id = ?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        User user = null;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            ps = conn.prepareStatement(sql);
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn();
+        }
+        return user;
+    }
+
+    // 添加用户
+    public boolean addUser(User user) {
+        String sql = "INSERT INTO t_user (username, password, email) VALUES (?, ?, ?)";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn();
+        }
+        return result > 0;
+    }
+
+    // 更新用户
+    public boolean updateUser(User user) {
+        String sql = "UPDATE t_user SET username=?, password=?, email=? WHERE id=?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, user.getUsername());
+            ps.setString(2, user.getPassword());
+            ps.setString(3, user.getEmail());
+            ps.setInt(4, user.getId());
+            result = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn();
+        }
+        return result > 0;
+    }
+
+    // 删除用户
+    public boolean deleteUser(int id) {
+        String sql = "DELETE FROM t_user WHERE id=?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        int result = 0;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            if(conn != null) {
+                ps = conn.prepareStatement(sql);
+                ps.setInt(1, id);
+                result = ps.executeUpdate();
+                System.out.println("删除用户，影响行数: " + result);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn(conn);
+        }
+        return result > 0;
+    }
+
+    // 根据用户名查询用户
+    public User getUserByUsername(String username) {
+        String sql = "SELECT id, username, password, email FROM t_user WHERE username=?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        User user = null;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn();
+        }
+        return user;
+    }
+
+    // 用户登录验证
+    public User login(String username, String password) {
+        String sql = "SELECT id, username, password, email FROM t_user WHERE username=? AND password=?";
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        User user = null;
+
+        try {
+            conn = DataSourceUtil.initConn();
+            ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setEmail(rs.getString("email"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            if (rs != null) {
+                try {
+                    rs.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            if (ps != null) {
+                try {
+                    ps.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            DataSourceUtil.closeConn();
+        }
+        return user;
+    }
+}

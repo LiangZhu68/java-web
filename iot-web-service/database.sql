@@ -1,0 +1,63 @@
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS book CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE book;
+
+-- 用户表
+CREATE TABLE IF NOT EXISTS t_user (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    username VARCHAR(50) NOT NULL UNIQUE,
+    password VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL,
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 图书表
+CREATE TABLE IF NOT EXISTS t_book (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    author VARCHAR(100) NOT NULL,
+    sales INT DEFAULT 0,
+    stock INT NOT NULL,
+    img_path VARCHAR(500),
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);
+
+-- 购物车表
+CREATE TABLE IF NOT EXISTS t_cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    book_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    book_name VARCHAR(200) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES t_user(id),
+    FOREIGN KEY (book_id) REFERENCES t_book(id)
+);
+
+-- 订单表
+CREATE TABLE IF NOT EXISTS t_orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL UNIQUE,
+    user_id INT NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    status INT DEFAULT 0, -- 0-待付款, 1-已付款, 2-已发货, 3-已完成, -1-已取消
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    order_items TEXT, -- 存储订单项的JSON字符串
+    FOREIGN KEY (user_id) REFERENCES t_user(id)
+);
+
+-- 创建初始管理员用户
+INSERT INTO t_user (username, password, email) VALUES ('admin', '040608', 'admin@example.com') ON DUPLICATE KEY UPDATE username=username;
+
+-- 插入测试图书数据
+INSERT INTO t_book (name, price, author, stock, img_path) VALUES 
+('Java编程思想', 89.00, 'Bruce Eckel', 10, 'static/img/java.jpg'),
+('设计模式', 65.00, 'Gang of Four', 15, 'static/img/design_pattern.jpg'),
+('算法导论', 128.00, 'Thomas H.Cormen', 5, 'static/img/algorithms.jpg')
+ON DUPLICATE KEY UPDATE name=name;
