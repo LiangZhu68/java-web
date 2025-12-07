@@ -375,44 +375,6 @@
             if(users != null) {
             %>
 
-            <div class="stats">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <div class="number"><%= users.size() %></div>
-                    <div class="label">用户总数</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-user-check"></i>
-                    <div class="number">
-                    <%
-                        int activeUsers = 0;
-                        for(User user : users) {
-                            if(user.getId() > 0) activeUsers++; // 所有注册用户都被视为活跃用户
-                        }
-                        out.print(activeUsers);
-                    %>
-                    </div>
-                    <div class="label">活跃用户</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-at"></i>
-                    <div class="number">
-                    <%
-                        int emailCount = 0;
-                        for(User user : users) {
-                            if(user.getEmail() != null && !user.getEmail().isEmpty()) emailCount++;
-                        }
-                        out.print(emailCount);
-                    %>
-                    </div>
-                    <div class="label">邮件账户</div>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-calendar"></i>
-                    <div class="number">2025</div>
-                    <div class="label">注册年份</div>
-                </div>
-            </div>
 
             <div class="table-container">
                 <table>
