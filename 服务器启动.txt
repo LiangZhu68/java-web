@@ -1,6 +1,0 @@
- 1. 使用Maven Jetty插件启动服务器：
-cd /mnt/c/Users/liangzhu/Downloads/实验二/iot-web-service/
-mvn jetty:run
-
- 2. 通过以下网址访问应用程序：
- http://localhost:9090/iot-web-service/
