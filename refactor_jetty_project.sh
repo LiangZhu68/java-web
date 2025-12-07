@@ -1,0 +1,135 @@
+#!/bin/bash
+
+echo "开始Jetty项目卸载重构..."
+
+# 停止所有相关的运行进程
+echo "停止相关进程..."
+pkill -f 'org.eclipse.jetty' 2>/dev/null || true
+pkill -f 'iot-web-service' 2>/dev/null || true
+
+# 进入项目目录
+cd /mnt/c/Users/liangzhu/Documents/GitHub/java-web/iot-web-service
+
+# 清理Maven构建产物
+echo "清理Maven构建产物..."
+mvn clean
+
+# 删除target目录
+rm -rf target/
+
+# 备份原始pom.xml
+echo "备份原始pom.xml..."
+cp pom.xml pom.xml.backup.$(date +%Y%m%d_%H%M%S)
+
+# 重新创建pom.xml，包含完整的Jetty配置
+echo "重构pom.xml文件..."
+cat > pom.xml << 'EOF'
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>com.zwu.iot</groupId>
+  <artifactId>iot-web-service</artifactId>
+  <packaging>war</packaging>
+  <version>1.0-SNAPSHOT</version>
+  <name>iot-web-service Maven Webapp</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <maven.compiler.source>8</maven.compiler.source>
+    <maven.compiler.target>8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <jetty.version>9.4.51.v20230217</jetty.version>
+  </properties>
+
+  <dependencies>
+    <!-- JUnit 依赖 -->
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.13.2</version>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- Servlet API 依赖 -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>4.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSP API 依赖 -->
+    <dependency>
+      <groupId>javax.servlet.jsp</groupId>
+      <artifactId>jsp-api</artifactId>
+      <version>2.2</version>
+      <scope>provided</scope>
+    </dependency>
+
+    <!-- JSTL 依赖 -->
+    <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jstl</artifactId>
+      <version>1.2</version>
+    </dependency>
+
+    <!-- MySQL 连接器依赖 -->
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>8.0.33</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>iot-web-service</finalName>
+    <plugins>
+      <!-- 编译插件 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>8</source>
+          <target>8</target>
+        </configuration>
+      </plugin>
+
+      <!-- WAR打包插件 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-war-plugin</artifactId>
+        <version>3.2.3</version>
+        <configuration>
+          <failOnMissingWebXml>false</failOnMissingWebXml>
+        </configuration>
+      </plugin>
+
+      <!-- Jetty插件 -->
+      <plugin>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-maven-plugin</artifactId>
+        <version>${jetty.version}</version>
+        <configuration>
+          <httpConnector>
+            <port>8086</port>  <!-- 使用未被占用的端口 -->
+          </httpConnector>
+          <scanIntervalSeconds>10</scanIntervalSeconds>
+          <stopKey>stop</stopKey>
+          <stopPort>9999</stopPort>
+          <webApp>
+            <contextPath>/</contextPath>
+          </webApp>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>
+EOF
+
+echo "项目重构完成！"
+echo "新的配置使用8086端口，避免了与系统服务的冲突。"
+echo ""
+echo "要运行项目，请执行以下命令："
+echo "cd /mnt/c/Users/liangzhu/Documents/GitHub/java-web/iot-web-service"
+echo "mvn clean compile jetty:run"
