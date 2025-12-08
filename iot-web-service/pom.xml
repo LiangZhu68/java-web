@@ -78,19 +78,15 @@
         </configuration>
       </plugin>
 
-      <!-- 添加Jetty插件用于本地开发 -->
+      <!-- 添加Tomcat插件用于本地开发 -->
       <plugin>
-        <groupId>org.eclipse.jetty</groupId>
-        <artifactId>jetty-maven-plugin</artifactId>
-        <version>9.4.51.v20230217</version>
+        <groupId>org.apache.tomcat.maven</groupId>
+        <artifactId>tomcat7-maven-plugin</artifactId>
+        <version>2.2</version>
         <configuration>
-          <httpConnector>
-            <port>8086</port>
-          </httpConnector>
-          <scanIntervalSeconds>10</scanIntervalSeconds>
-          <webApp>
-            <contextPath>/</contextPath>
-          </webApp>
+          <port>8086</port>
+          <path>/</path>
+          <contextReloadable>true</contextReloadable>
         </configuration>
       </plugin>
     </plugins>
