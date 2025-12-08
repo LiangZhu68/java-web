@@ -24,60 +24,71 @@
 ### 3.1 项目目录结构
 
 ```
-iot-web-service/
-├── pom.xml
-├── database.sql
-├── PROJECT_SUMMARY.md
-├── src/
-│   ├── main/
-│   │   ├── java/
-│   │   │   ├── beans/
-│   │   │   │   ├── Book.java         # 图书实体类
-│   │   │   │   ├── Cart.java         # 购物车实体类
-│   │   │   │   ├── Order.java        # 订单实体类
-│   │   │   │   └── User.java         # 用户实体类
-│   │   │   ├── dao/
-│   │   │   │   ├── BookDao.java      # 图书数据访问类
-│   │   │   │   ├── CartDao.java      # 购物车数据访问类
-│   │   │   │   ├── DataSourceUtil.java # 数据库连接工具类
-│   │   │   │   ├── DBUtils.java      # 数据库操作工具类
-│   │   │   │   ├── OrderDao.java     # 订单数据访问类
-│   │   │   │   └── UserDao.java      # 用户数据访问类
-│   │   │   ├── filter/
-│   │   │   │   └── encodingFilter.java # 编码过滤器
-│   │   │   └── servlet/
-│   │   │       ├── AddBookServlet.java   # 添加图书控制器
-│   │   │       ├── BookListServlet.java  # 图书列表控制器
-│   │   │       ├── CartServlet.java      # 购物车控制器
-│   │   │       ├── LoginServlet.java     # 用户登录控制器
-│   │   │       ├── LogoutServlet.java    # 用户注销控制器
-│   │   │       ├── OrderListServlet.java # 订单列表控制器
-│   │   │       ├── RegisterServlet.java  # 用户注册控制器
-│   │   │       ├── TestDbConnectionServlet.java # 数据库连接测试控制器
-│   │   │       ├── UpdateDeleteBookServlet.java # 图书更新删除控制器
-│   │   │       ├── UserEditServlet.java  # 用户编辑控制器
-│   │   │       └── UserListServlet.java  # 用户列表控制器
-│   │   ├── resources/
-│   │   │   └── jdbc.properties     # 数据库配置文件
-│   │   └── webapp/
-│   │       ├── addBook.jsp         # 添加图书页面
-│   │       ├── bookList.jsp        # 图书列表页面
-│   │       ├── cart.jsp            # 购物车页面
-│   │       ├── editBook.jsp        # 编辑图书页面
-│   │       ├── index.jsp           # 首页
-│   │       ├── login.jsp           # 登录页面
-│   │       ├── orderConfirmation.jsp # 订单确认页面
-│   │       ├── orderList.jsp       # 订单列表页面
-│   │       ├── register.jsp        # 注册页面
-│   │       ├── userEdit.jsp        # 用户编辑页面
-│   │       ├── userList.jsp        # 用户列表页面
-│   │       ├── img/                # 图片资源
-│   │       ├── static/             # 静态资源
-│   │       │   ├── css/            # 样式文件
-│   │       │   ├── js/             # JavaScript文件
-│   │       │   └── img/            # 图片资源
-│   │       └── WEB-INF/
-│   │           └── web.xml         # Web应用配置文件
+java-web/
+├── README.md                       # 项目说明文档
+├── add_books.sql                   # 图书数据初始化SQL脚本
+├── AddBooks.java                   # 图书数据初始化Java程序
+├── cleanup_project.sh              # 项目清理脚本
+├── 《物联网信息服务》任务书-实验2-WEB信息服务综合应用.docx
+├── 《物联网信息服务》指导书-实验2-WEB信息服务综合应用.doc
+├── 实验2 实验报告模板.doc
+└── iot-web-service/
+    ├── pom.xml                     # Maven项目配置文件
+    ├── database.sql                # 数据库表结构SQL脚本
+    ├── init_database.bat           # Windows批处理数据库初始化脚本
+    ├── my.ini                      # MySQL配置文件
+    ├── RUNNING.md                  # 项目运行说明文档
+    ├── src/
+    │   ├── main/
+    │   │   ├── java/
+    │   │   │   ├── beans/
+    │   │   │   │   ├── Book.java         # 图书实体类
+    │   │   │   │   ├── Cart.java         # 购物车实体类
+    │   │   │   │   ├── Order.java        # 订单实体类
+    │   │   │   │   └── User.java         # 用户实体类
+    │   │   │   ├── dao/
+    │   │   │   │   ├── BookDao.java      # 图书数据访问类
+    │   │   │   │   ├── CartDao.java      # 购物车数据访问类
+    │   │   │   │   ├── DataSourceUtil.java # 数据库连接工具类
+    │   │   │   │   ├── DBUtils.java      # 数据库操作工具类
+    │   │   │   │   ├── OrderDao.java     # 订单数据访问类
+    │   │   │   │   └── UserDao.java      # 用户数据访问类
+    │   │   │   ├── filter/
+    │   │   │   │   └── encodingFilter.java # 编码过滤器
+    │   │   │   └── servlet/
+    │   │   │       ├── AddBookServlet.java   # 添加图书控制器
+    │   │   │       ├── BookListServlet.java  # 图书列表控制器
+    │   │   │       ├── CartServlet.java      # 购物车控制器
+    │   │   │       ├── LoginServlet.java     # 用户登录控制器
+    │   │   │       ├── LogoutServlet.java    # 用户注销控制器
+    │   │   │       ├── OrderListServlet.java # 订单列表控制器
+    │   │   │       ├── RegisterServlet.java  # 用户注册控制器
+    │   │   │       ├── TestDbConnectionServlet.java # 数据库连接测试控制器
+    │   │   │       ├── UpdateDeleteBookServlet.java # 图书更新删除控制器
+    │   │   │       ├── UserEditServlet.java  # 用户编辑控制器
+    │   │   │       └── UserListServlet.java  # 用户列表控制器
+    │   │   ├── resources/
+    │   │   │   └── jdbc.properties         # 数据库配置文件
+    │   │   └── webapp/
+    │   │       ├── addBook.jsp             # 添加图书页面
+    │   │       ├── bookList.jsp            # 图书列表页面
+    │   │       ├── cart.jsp                # 购物车页面
+    │   │       ├── editBook.jsp            # 编辑图书页面
+    │   │       ├── index.jsp               # 首页
+    │   │       ├── login.jsp               # 登录页面
+    │   │       ├── orderConfirmation.jsp   # 订单确认页面
+    │   │       ├── orderList.jsp           # 订单列表页面
+    │   │       ├── register.jsp            # 注册页面
+    │   │       ├── userEdit.jsp            # 用户编辑页面
+    │   │       ├── userList.jsp            # 用户列表页面
+    │   │       ├── img/                    # 图片资源
+    │   │       ├── static/                 # 静态资源
+    │   │       │   ├── css/                # 样式文件
+    │   │       │   ├── js/                 # JavaScript文件
+    │   │       │   └── img/                # 图片资源
+    │   │       └── WEB-INF/
+    │   │           └── web.xml             # Web应用配置文件
+    └── target/                             # Maven构建输出目录
 ```
 
 ### 3.2 技术架构
@@ -382,10 +393,35 @@ CREATE TABLE IF NOT EXISTS t_orders (
 要运行本项目，请按以下步骤操作：
 
 1. 确保系统已安装JDK 8+、Maven和MySQL
-2. 安装MySQL数据库，执行database.sql脚本创建数据库和表结构
+2. 安装MySQL数据库，执行`database.sql`脚本创建数据库和表结构
 3. 修改`src/main/resources/jdbc.properties`文件中的数据库连接信息（用户名、密码等）
 4. 在项目根目录下执行命令：`mvn tomcat7:run`
 5. 访问应用：`http://localhost:8086/`
+
+### 10.1 数据初始化
+
+项目提供了多种数据初始化方式：
+
+**方式一：使用SQL脚本**
+- 执行根目录下的`add_books.sql`脚本，该脚本将清空图书表并插入21本示例图书数据
+- 示例图书包括：Java编程思想、设计模式、算法导论等技术类书籍
+
+**方式二：使用Java程序**
+- 运行根目录下的`AddBooks.java`程序，该程序将通过数据库连接直接插入20本示例图书数据
+- 程序使用`DataSourceUtil`工具类管理数据库连接
+
+### 10.2 项目维护
+
+- 项目包含`cleanup_project.sh`脚本用于清理无用文件和构建目录
+- 该脚本会自动删除日志文件、备份文件和target目录（Maven构建目录）
+- 可通过执行`./cleanup_project.sh`来清理项目
+
+### 10.3 依赖文档
+
+项目还包含以下文档：
+- 《物联网信息服务》任务书-实验2-WEB信息服务综合应用.docx
+- 《物联网信息服务》指导书-实验2-WEB信息服务综合应用.doc
+- 实验2 实验报告模板.doc
 
 ## 11. 系统优势
 
@@ -412,10 +448,13 @@ CREATE TABLE IF NOT EXISTS t_orders (
 3. 优化了用户界面，提供更好的用户体验
 4. 增强了错误处理机制，提高系统稳定性
 5. 改进了数据库连接池管理，提高性能
+6. 提供了多种数据初始化方式（SQL脚本和Java程序）
+7. 增加了项目维护脚本，便于项目清理和维护
+8. 补充了详细的项目文档和说明
 
 ## 13. 项目成就
 
-此项目成功实现了预期的所有功能，包括用户注册登录、图书管理、购物车功能和订单系统，并且具有现代化的用户界面和良好的用户体验。系统代码结构清晰，遵循良好的编程实践，是一个成功的Web应用开发实例。
+此项目成功实现了预期的所有功能，包括用户注册登录、图书管理、购物车功能和订单系统，并且具有现代化的用户界面和良好的用户体验。系统代码结构清晰，遵循良好的编程实践，是一个成功的Web应用开发实例。项目还提供了多种数据初始化方式和项目维护工具，使得系统更易于部署和维护。
 
 ## 14. 总结与反思
 
