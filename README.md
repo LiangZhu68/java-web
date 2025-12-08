@@ -303,7 +303,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
 
 **pom.xml** - Maven项目配置文件
 - 配置了Servlet API, JSP API, JSTL, MySQL连接器等依赖
-- 配置了Jetty插件用于运行Web应用
+- 配置了Tomcat插件用于运行Web应用
 - 设置了编译版本和打包插件
 
 **jdbc.properties** - 数据库连接配置文件
@@ -319,7 +319,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
 1. 使用Maven创建Web项目骨架
 2. 配置pom.xml添加所需依赖
 3. 创建包结构（beans, dao, filter, servlet）
-4. 配置Jetty插件以支持mvn jetty:run命令
+4. 配置Tomcat插件以支持mvn tomcat7:run命令
 
 ### 7.2 实体类实现
 按照JavaBean规范创建了User、Book、Cart和Order实体类，实现了Serializable接口和克隆方法。
@@ -342,7 +342,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
 ## 8. 实验数据记录或图片
 
 - **项目成功编译**: 执行`mvn clean compile`成功，无编译错误
-- **服务器成功启动**: 执行`mvn jetty:run`成功启动Jetty服务器
+- **服务器成功启动**: 执行`mvn tomcat7:run`成功启动Tomcat服务器
 - **页面访问测试**: curl测试显示服务器正常响应HTTP 200状态码
 - **功能模块**:
   - 首页: http://localhost:8086/
@@ -384,7 +384,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
 1. 确保系统已安装JDK 8+、Maven和MySQL
 2. 安装MySQL数据库，执行database.sql脚本创建数据库和表结构
 3. 修改`src/main/resources/jdbc.properties`文件中的数据库连接信息（用户名、密码等）
-4. 在项目根目录下执行命令：`mvn tomcat7:run` 或 `mvn jetty:run`
+4. 在项目根目录下执行命令：`mvn tomcat7:run`
 5. 访问应用：`http://localhost:8086/`
 
 ## 11. 系统优势
@@ -400,7 +400,7 @@ CREATE TABLE IF NOT EXISTS t_orders (
 ## 12. 修复说明
 
 **修复的主要问题：**
-1. 修复了Jetty插件配置，确保服务器能够正常启动
+1. 修复了Tomcat插件配置，确保服务器能够正常启动
 2. 修复了数据库连接管理，优化了连接的开启和关闭
 3. 修复了字符编码问题，确保中文正常显示
 4. 修复了会话管理机制，确保用户登录状态正确维持
