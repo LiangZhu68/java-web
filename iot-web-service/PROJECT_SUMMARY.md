@@ -10,7 +10,7 @@
 - **后端**: Java Servlet, JavaBean
 - **数据库**: MySQL
 - **构建工具**: Maven
-- **服务器**: Jetty
+- **服务器**: Tomcat
 - **架构模式**: MVC (Model-View-Controller)
 
 ## 主要功能
@@ -74,7 +74,7 @@
 1. 确保JDK 8+、Maven和MySQL已安装
 2. 导入database.sql创建数据库
 3. 配置jdbc.properties中的数据库连接信息
-4. 运行 `mvn jetty:run`
+4. 运行 `mvn tomcat7:run`
 5. 访问 http://localhost:8086/
 
 ## 系统优势
