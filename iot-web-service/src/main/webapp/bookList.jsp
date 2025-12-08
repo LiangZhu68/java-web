@@ -1,4 +1,6 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="beans.User" %>
 <%@ page import="java.util.List" %>
 <%@ page import="beans.Book" %>
 <!DOCTYPE html>
@@ -54,6 +56,8 @@
 
         .search-box {
             position: relative;
+            flex: 1;
+            max-width: 400px;
         }
 
         .search-box input {
@@ -62,7 +66,7 @@
             border-radius: 25px;
             font-size: 14px;
             transition: all 0.3s ease;
-            width: 300px;
+            width: 100%;
         }
 
         .search-box i {
@@ -120,44 +124,6 @@
             text-align: center;
         }
 
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .stat-card {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-            text-align: center;
-            border-left: 4px solid #2a5298;
-            transition: transform 0.3s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-
-        .stat-card i {
-            font-size: 2.5rem;
-            color: #2a5298;
-            margin-bottom: 15px;
-        }
-
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #343a40;
-        }
-
-        .stat-card .label {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
-
         .table-container {
             overflow-x: auto;
             border-radius: 12px;
@@ -176,6 +142,19 @@
             padding: 15px 20px;
             text-align: left;
             font-weight: 500;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #3a62a8 0%, #2e4c82 100%);
+        }
+
+        th i.sort-icon {
+            margin-left: 5px;
+            font-size: 0.8em;
+            opacity: 0.7;
         }
 
         td {
@@ -257,8 +236,7 @@
 
         .price {
             font-weight: bold;
-            color: #2a5298;
-            font-size: 1.1rem;
+            color: #e74c3c;
         }
 
         .empty-state {
@@ -309,8 +287,9 @@
                 align-items: stretch;
             }
 
-            .search-box input {
-                width: 100%;
+            .search-box {
+                max-width: 100%;
+                margin-bottom: 10px;
             }
 
             .nav-links {
@@ -325,16 +304,12 @@
                 padding: 8px 16px;
             }
 
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
             .table-container {
                 font-size: 0.9rem;
             }
 
             th, td {
-                padding: 10px;
+                padding: 10px 8px;
             }
         }
     </style>
@@ -343,23 +318,20 @@
     <div class="container">
         <div class="header">
             <h1><i class="fas fa-book"></i> 图书管理中心</h1>
-            <p>管理图书信息，添加新书，维护库存</p>
+            <p>管理图书信息，维护库存和价格</p>
         </div>
 
         <div class="controls">
             <div class="search-box">
                 <i class="fas fa-search"></i>
-                <input type="text" placeholder="搜索书名、作者...">
+                <input type="text" placeholder="搜索图书名称、作者...">
             </div>
             <div class="nav-links">
-                <a href="<%= request.getContextPath() %>/index.jsp">
+                <a href="${pageContext.request.contextPath}/index.jsp">
                     <i class="fas fa-home"></i> 首页
                 </a>
-                <a href="<%= request.getContextPath() %>/servlet/addBook" class="primary">
+                <a href="${pageContext.request.contextPath}/servlet/addBook" class="primary">
                     <i class="fas fa-plus"></i> 添加图书
-                </a>
-                <a href="<%= request.getContextPath() %>/servlet/cart">
-                    <i class="fas fa-shopping-cart"></i> 购物车
                 </a>
             </div>
         </div>
@@ -369,48 +341,61 @@
 
             <%
             List<Book> books = (List<Book>) request.getAttribute("bookList");
-            if(books != null) {
+            if(books != null && !books.isEmpty()) {
             %>
 
             <div class="table-container">
                 <table>
                     <thead>
                         <tr>
-                            <th>序号</th>
-                            <th>书名</th>
-                            <th>作者</th>
-                            <th>价格</th>
-                            <th>库存</th>
+                            <th onclick="sortTable('id')">
+                                ID
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th onclick="sortTable('name')">
+                                书名
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th onclick="sortTable('author')">
+                                作者
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th onclick="sortTable('price')">
+                                价格
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th onclick="sortTable('stock')">
+                                库存
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
+                            <th onclick="sortTable('sales')">
+                                销量
+                                <i class="sort-icon fas fa-sort"></i>
+                            </th>
                             <th>操作</th>
                         </tr>
                     </thead>
                     <tbody>
                     <%
-                        for(int i = 0; i < books.size(); i++) {
-                            Book book = books.get(i);
+                        for(Book book : books) {
                     %>
                     <tr>
-                        <td><strong>#<%= String.format("%05d", i+1) %></strong></td>
+                        <td><strong>#<%= book.getId() %></strong></td>
                         <td><%= book.getName() %></td>
                         <td><%= book.getAuthor() %></td>
-                        <td class="price">¥<%= String.format("%.2f", book.getPrice()) %></td>
-                        <td>
-                            <span style="padding: 4px 10px; background: <%= book.getBookCount() > 10 ? "#d4edda" : (book.getBookCount() > 0 ? "#fff3cd" : "#f8d7da") %>;
-                                  color: <%= book.getBookCount() > 10 ? "#155724" : (book.getBookCount() > 0 ? "#856404" : "#721c24") %>;
-                                  border-radius: 20px; font-size: 0.9rem;">
-                                <%= book.getBookCount() %> 本
-                            </span>
-                        </td>
+                        <td class="price">¥<%= book.getPrice() %></td>
+                        <td><%= book.getBookCount() %></td>
+                        <td><%= book.getSales() %></td>
                         <td>
                             <div class="action-buttons">
-                                <a href="<%= request.getContextPath() %>/servlet/updateBook?id=<%= book.getId() %>" class="btn btn-primary">
+                                <a href="${pageContext.request.contextPath}/servlet/cart?action=addToCart&id=<%= book.getId() %>" class="btn btn-success">
+                                    <i class="fas fa-cart-plus"></i> 添加购物车
+                                </a>
+                                <a href="${pageContext.request.contextPath}/servlet/updateBook?id=<%= book.getId() %>" class="btn btn-primary">
                                     <i class="fas fa-edit"></i> 编辑
                                 </a>
-                                <a href="<%= request.getContextPath() %>/servlet/deleteBook?id=<%= book.getId() %>" class="btn btn-danger" onclick="return confirm('确定要删除这本书吗？')">
+                                <a href="${pageContext.request.contextPath}/servlet/deleteBook?id=<%= book.getId() %>" class="btn btn-danger" onclick="return confirm('确定要删除这本书吗？')">
                                     <i class="fas fa-trash"></i> 删除
-                                </a>
-                                <a href="<%= request.getContextPath() %>/servlet/cart?action=addToCart&id=<%= book.getId() %>&name=<%= java.net.URLEncoder.encode(book.getName(), "UTF-8") %>&price=<%= book.getPrice() %>&author=<%= java.net.URLEncoder.encode(book.getAuthor(), "UTF-8") %>&stock=<%= book.getBookCount() %>" class="btn btn-success">
-                                    <i class="fas fa-cart-plus"></i> 加入购物车
                                 </a>
                             </div>
                         </td>
@@ -425,7 +410,7 @@
             <% } else { %>
 
             <div class="empty-state">
-                <i class="fas fa-books"></i>
+                <i class="fas fa-book-open"></i>
                 <h3>暂无图书数据</h3>
                 <p>系统中还没有任何图书记录，点击上方"添加图书"按钮开始添加图书</p>
             </div>
@@ -452,6 +437,35 @@
                     }
                 });
             });
+        });
+        
+        // 排序功能
+        function sortTable(sortBy) {
+            const currentSortBy = '<%= request.getAttribute("sortBy") %>';
+            const currentOrder = '<%= request.getAttribute("order") %>';
+            
+            let newOrder = 'ASC';
+            if (currentSortBy === sortBy && currentOrder === 'ASC') {
+                newOrder = 'DESC';
+            }
+            
+            window.location.href = '?sortBy=' + sortBy + '&order=' + newOrder;
+        }
+        
+        // 更新排序图标
+        document.addEventListener('DOMContentLoaded', function() {
+            const sortBy = '<%= request.getAttribute("sortBy") %>';
+            const order = '<%= request.getAttribute("order") %>';
+            
+            if (sortBy) {
+                const header = document.querySelector(`th[onclick*="sortTable('${sortBy}')"]`);
+                if (header) {
+                    const sortIcon = header.querySelector('.sort-icon');
+                    if (sortIcon) {
+                        sortIcon.className = 'sort-icon fas ' + (order === 'DESC' ? 'fa-sort-down' : 'fa-sort-up');
+                    }
+                }
+            }
         });
     </script>
 </body>

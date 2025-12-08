@@ -12,12 +12,21 @@ public class BookDao {
 
     // 获取所有图书数据
     public List<Book> getAllBooks() {
+        return getAllBooks("id", "ASC"); // 默认按ID升序排列
+    }
+
+    // 按指定字段和顺序获取图书数据
+    public List<Book> getAllBooks(String sortBy, String order) {
         List<Book> bookList = new ArrayList<>();
-        String sql = "SELECT id, name, price, author, stock FROM t_book";
+        // 验证排序字段和顺序，防止SQL注入
+        String validSortBy = isValidSortField(sortBy) ? sortBy : "id";
+        String validOrder = isValidOrder(order) ? order : "ASC";
+
+        String sql = "SELECT id, name, price, author, stock, sales FROM t_book ORDER BY " + validSortBy + " " + validOrder;
         Connection conn = null;
         Statement stm = null;
         ResultSet rs = null;
-        
+
         try {
             conn = DataSourceUtil.initConn();
             if(conn == null) {
@@ -33,7 +42,7 @@ public class BookDao {
                 book.setPrice(rs.getDouble("price"));
                 book.setAuthor(rs.getString("author"));
                 book.setBookCount(rs.getInt("stock"));
-                // 如果需要其他字段，可以在这里设置
+                book.setSales(rs.getInt("sales"));
                 bookList.add(book);
             }
         } catch (Exception e) {
@@ -57,6 +66,23 @@ public class BookDao {
             DataSourceUtil.closeConn(conn);
         }
         return bookList;
+    }
+
+    // 验证排序字段是否合法，防止SQL注入
+    private boolean isValidSortField(String field) {
+        if (field == null) return false;
+        return field.equalsIgnoreCase("id") ||
+               field.equalsIgnoreCase("name") ||
+               field.equalsIgnoreCase("price") ||
+               field.equalsIgnoreCase("author") ||
+               field.equalsIgnoreCase("stock") ||
+               field.equalsIgnoreCase("sales");
+    }
+
+    // 验证排序顺序是否合法，防止SQL注入
+    private boolean isValidOrder(String order) {
+        if (order == null) return false;
+        return order.equalsIgnoreCase("ASC") || order.equalsIgnoreCase("DESC");
     }
 
     // 根据ID获取图书

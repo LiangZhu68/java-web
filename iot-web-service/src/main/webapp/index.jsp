@@ -52,6 +52,9 @@
             position: absolute;
             top: 20px;
             right: 30px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
             text-align: right;
             font-size: 1rem;
             color: white;
@@ -60,16 +63,36 @@
         .user-info a {
             color: #fff;
             text-decoration: none;
-            margin-left: 15px;
-            padding: 8px 15px;
-            border-radius: 20px;
+            padding: 10px 18px;
+            border-radius: 25px;
             background: rgba(255, 255, 255, 0.2);
             transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            backdrop-filter: blur(10px);
         }
 
         .user-info a:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .user-info a.login, .user-info a.register {
+            background: linear-gradient(135deg, #2a5298 0%, #1e3c72 100%);
+        }
+
+        .user-info a.login:hover, .user-info a.register:hover {
+            background: linear-gradient(135deg, #3a62a8 0%, #2e4c82 100%);
+        }
+
+        .user-info a.logout {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+        }
+
+        .user-info a.logout:hover {
+            background: linear-gradient(135deg, #e85a4f 0%, #c74d40 100%);
         }
 
         .content {
@@ -225,13 +248,19 @@
                 User currentUser = (User) session.getAttribute("currentUser");
                 if(currentUser != null) {
                 %>
-                    欢迎, <%= currentUser.getUsername() %>!
-                    <a href="servlet/logout"><i class="fas fa-sign-out-alt"></i> 注销</a>
+                    <span>欢迎, <%= currentUser.getUsername() %>!</span>
+                    <a href="${pageContext.request.contextPath}/servlet/logout" class="logout">
+                        <i class="fas fa-sign-out-alt"></i> 注销
+                    </a>
                 <%
                 } else {
                 %>
-                    <a href="login.jsp"><i class="fas fa-sign-in-alt"></i> 登录</a>
-                    <a href="register.jsp"><i class="fas fa-user-plus"></i> 注册</a>
+                    <a href="login.jsp" class="login">
+                        <i class="fas fa-sign-in-alt"></i> 登录
+                    </a>
+                    <a href="register.jsp" class="register">
+                        <i class="fas fa-user-plus"></i> 注册
+                    </a>
                 <%
                 }
                 %>
@@ -263,22 +292,22 @@
             <h2 style="margin: 40px 0; color: #212529;">快速导航</h2>
 
             <div class="menu">
-                <a href="servlet/bookList" class="menu-item">
+                <a href="${pageContext.request.contextPath}/servlet/bookList" class="menu-item">
                     <i class="fas fa-book"></i>
                     <h3>图书管理</h3>
                     <p>浏览和管理图书</p>
                 </a>
-                <a href="servlet/userList" class="menu-item">
+                <a href="${pageContext.request.contextPath}/servlet/userList" class="menu-item">
                     <i class="fas fa-users"></i>
                     <h3>用户管理</h3>
                     <p>管理用户信息</p>
                 </a>
-                <a href="servlet/cart" class="menu-item">
+                <a href="${pageContext.request.contextPath}/servlet/cart" class="menu-item">
                     <i class="fas fa-shopping-cart"></i>
                     <h3>购物车</h3>
                     <p>查看购物车</p>
                 </a>
-                <a href="servlet/orderList" class="menu-item">
+                <a href="${pageContext.request.contextPath}/servlet/orderList" class="menu-item">
                     <i class="fas fa-list"></i>
                     <h3>订单管理</h3>
                     <p>查看和管理订单</p>

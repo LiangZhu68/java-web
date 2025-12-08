@@ -75,23 +75,32 @@ public class CartServlet extends HttpServlet {
         // 获取当前用户
         HttpSession session = request.getSession();
         User currentUser = (User) session.getAttribute("currentUser");
-        
+
         if (currentUser == null) {
             response.sendRedirect(request.getContextPath() + "/login.jsp");
             return;
         }
 
         int bookId = Integer.parseInt(request.getParameter("id"));
-        String bookName = request.getParameter("name");
-        double bookPrice = Double.parseDouble(request.getParameter("price"));
+
+        // 从数据库获取图书信息，而不是依赖页面传递的参数
+        BookDao bookDao = new BookDao();
+        Book book = bookDao.getBookById(bookId);
+
+        if (book == null) {
+            request.setAttribute("errorMsg", "图书不存在！");
+            response.sendRedirect(request.getContextPath() + "/servlet/bookList");
+            return;
+        }
+
         int quantity = 1; // 默认添加数量为1
 
         Cart cart = new Cart();
         cart.setUserId(currentUser.getId());
         cart.setBookId(bookId);
         cart.setQuantity(quantity);
-        cart.setBookName(bookName);
-        cart.setPrice(bookPrice);
+        cart.setBookName(book.getName());
+        cart.setPrice(book.getPrice());
 
         CartDao cartDao = new CartDao();
         boolean success = cartDao.addToCart(cart);

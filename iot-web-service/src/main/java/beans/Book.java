@@ -8,6 +8,7 @@ public class Book implements Cloneable, Serializable {
     private double price;
     private int bookCount;
     private String author;
+    private int sales;
 
     public int getId() {
         return id;
@@ -47,6 +48,14 @@ public class Book implements Cloneable, Serializable {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public int getSales() {
+        return sales;
+    }
+
+    public void setSales(int sales) {
+        this.sales = sales;
     }
 
     @Override

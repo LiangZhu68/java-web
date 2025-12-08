@@ -14,16 +14,21 @@ import beans.Book;
 public class BookListServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        String sortBy = request.getParameter("sortBy");
+        String order = request.getParameter("order");
+
         BookDao bookDao = new BookDao();
-        List<Book> bookList = bookDao.getAllBooks();
-        
+        List<Book> bookList = bookDao.getAllBooks(sortBy, order);
+
         request.setAttribute("bookList", bookList);
+        request.setAttribute("sortBy", sortBy);
+        request.setAttribute("order", order);
         request.getRequestDispatcher("/bookList.jsp").forward(request, response);
     }
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         doGet(request, response);
     }
