@@ -29,8 +29,6 @@ java-web/
 ├── add_books.sql                   # 图书数据初始化SQL脚本
 ├── AddBooks.java                   # 图书数据初始化Java程序
 ├── cleanup_project.sh              # 项目清理脚本
-├── 《物联网信息服务》任务书-实验2-WEB信息服务综合应用.docx
-├── 《物联网信息服务》指导书-实验2-WEB信息服务综合应用.doc
 ├── 实验2 实验报告模板.doc
 └── iot-web-service/
     ├── pom.xml                     # Maven项目配置文件
